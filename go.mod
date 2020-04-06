@@ -1,4 +1,4 @@
-module github.com/prixa.ai/gosocial
+module github.com/prixa-ai/gosocial
 
 go 1.14
 
