@@ -39,18 +39,26 @@ func (d *Dispatcher) New() *Gocial {
 }
 
 // Handle callback. Can be called only once for given state.
-func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, error) {
+func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, string, error) {
+	stateWithDecodedData, err := base64.StdEncoding.DecodeString(state)
+	if err != nil {
+		return nil, nil, "", err
+	}
+	stateWithDecodedDataSplitted := strings.Split(string(stateWithDecodedData), "|")
+	socialState := stateWithDecodedDataSplitted[0]
+
 	d.mu.RLock()
-	g, ok := d.g[state]
+	g, ok := d.g[socialState]
 	d.mu.RUnlock()
 	if !ok {
-		return nil, nil, fmt.Errorf("invalid CSRF token: %s", state)
+		return nil, nil, "", fmt.Errorf("invalid CSRF token: %s", state)
 	}
-	err := g.Handle(state, code)
+
+	err = g.Handle(socialState, code)
 	d.mu.Lock()
 	delete(d.g, state)
 	d.mu.Unlock()
-	return &g.User, g.Token, err
+	return &g.User, g.Token, stateWithDecodedDataSplitted[1], err
 }
 
 // Gocial is the main struct of the package
@@ -113,7 +121,7 @@ func (g *Gocial) Scopes(scopes []string) *Gocial {
 }
 
 // Redirect returns an URL for the selected social oAuth login
-func (g *Gocial) Redirect(clientID, clientSecret, redirectURL string) (string, error) {
+func (g *Gocial) Redirect(clientID, clientSecret, redirectURL string, additionaldata string) (string, error) {
 	// Check if driver is valid
 	if !inSlice(g.driver, complexKeys(apiMap)) {
 		return "", fmt.Errorf("Driver not valid: %s", g.driver)
@@ -136,7 +144,10 @@ func (g *Gocial) Redirect(clientID, clientSecret, redirectURL string) (string, e
 		Endpoint:     endpointMap[g.driver],
 	}
 
-	return g.conf.AuthCodeURL(g.state), nil
+	stateWithData := g.state + "|" + additionaldata
+	stateWithEncodedData := base64.StdEncoding.EncodeToString([]byte(stateWithData))
+
+	return g.conf.AuthCodeURL(stateWithEncodedData), nil
 }
 
 // Handle callback from provider
