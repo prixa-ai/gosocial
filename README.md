@@ -154,10 +154,3 @@ func callbackHandler(c *gin.Context) {
 ```
 
 Please take a look to [multi provider example](https://github.com/prixa-ai/gosocial/wiki/Multi-provider-example) for a full working code with Gin Tonic and variable provider handler.
-
-## Contributors
-
-- [Danilo Polani](https://github.com/prixa-ai)
-- [Joseph Buchma](https://github.com/josephbuchma)
-- [Mark Beznos](https://github.com/vibbix)
-- [Davor Kapsa](https://github.com/dvrkps)
