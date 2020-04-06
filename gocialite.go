@@ -44,8 +44,8 @@ func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, s
 	if err != nil {
 		return nil, nil, "", err
 	}
-	stateWithDataDecodedSplitted := strings.Split(string(stateWithDecodedData), "|")
-	socialState := stateWithDataDecodedSplitted[0]
+	stateWithDecodedDataSplitted := strings.Split(string(stateWithDecodedData), "|")
+	socialState := stateWithDecodedDataSplitted[0]
 
 	d.mu.RLock()
 	g, ok := d.g[socialState]
@@ -58,7 +58,7 @@ func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, s
 	d.mu.Lock()
 	delete(d.g, state)
 	d.mu.Unlock()
-	return &g.User, g.Token, stateWithDataDecodedSplitted[1], err
+	return &g.User, g.Token, stateWithDecodedDataSplitted[1], err
 }
 
 // Gocial is the main struct of the package
