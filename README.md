@@ -1,5 +1,5 @@
 # gosocial
-![Travis CI build](https://api.travis-ci.org/prixa-ai/gosocial.svg?branch=master)
+[![Build Status](https://travis-ci.org/prixa-ai/gosocial.svg?branch=master)](https://travis-ci.org/prixa-ai/gosocial)
 ![Available Drivers](https://img.shields.io/badge/Drivers-5+-orange.svg)
 [![GoDoc](https://godoc.org/github.com/prixa-ai/gosocial?status.svg)](https://godoc.org/github.com/prixa-ai/gosocial)
 [![GoReport](https://goreportcard.com/badge/github.com/prixa-ai/gosocial)](https://goreportcard.com/report/github.com/prixa-ai/gosocial)
