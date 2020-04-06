@@ -40,21 +40,21 @@ func (d *Dispatcher) New() *Gocial {
 
 // Handle callback. Can be called only once for given state.
 func (d *Dispatcher) Handle(state, code string) (*structs.User, *oauth2.Token, string, error) {
+	stateWithDecodedData, err := base64.StdEncoding.DecodeString(state)
+	if err != nil {
+		return nil, nil, "", err
+	}
+	stateWithDataDecodedSplitted := strings.Split(string(stateWithDecodedData), "|")
+	socialState := stateWithDataDecodedSplitted[0]
+
 	d.mu.RLock()
-	g, ok := d.g[state]
+	g, ok := d.g[socialState]
 	d.mu.RUnlock()
 	if !ok {
 		return nil, nil, "", fmt.Errorf("invalid CSRF token: %s", state)
 	}
 
-	stateWithDataDecoded, err := base64.StdEncoding.DecodeString(state)
-	if err != nil {
-		return nil, nil, "", err
-	}
-	stateWithDataDecodedSplitted := strings.Split(string(stateWithDataDecoded), "|")
-	trueState := stateWithDataDecodedSplitted[0]
-
-	err = g.Handle(trueState, code)
+	err = g.Handle(socialState, code)
 	d.mu.Lock()
 	delete(d.g, state)
 	d.mu.Unlock()
@@ -145,9 +145,9 @@ func (g *Gocial) Redirect(clientID, clientSecret, redirectURL string, additional
 	}
 
 	stateWithData := g.state + "|" + additionaldata
-	stateWithDataEncrypted := base64.StdEncoding.EncodeToString([]byte(stateWithData))
+	stateWithDataEncoded := base64.StdEncoding.EncodeToString([]byte(stateWithData))
 
-	return g.conf.AuthCodeURL(stateWithDataEncrypted), nil
+	return g.conf.AuthCodeURL(stateWithDataEncoded), nil
 }
 
 // Handle callback from provider
