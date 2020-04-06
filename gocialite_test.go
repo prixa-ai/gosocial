@@ -29,6 +29,7 @@ func TestConf(t *testing.T) {
 			"foo",
 			"bar",
 			"http://example.com/auth/callback",
+			"dummy data",
 		)
 
 	assert.Equal(gocialTest.conf.ClientID, "foo")
@@ -51,6 +52,7 @@ func TestDriver(t *testing.T) {
 			"xxxxxxxx",
 			"xxxxxxxxxxxxxxxxxxxxxxxx",
 			"http://example.com/auth/callback",
+			"dummy data",
 		)
 	assert.NotNil(t, err)
 
@@ -59,6 +61,7 @@ func TestDriver(t *testing.T) {
 			"xxxxxxxx",
 			"xxxxxxxxxxxxxxxxxxxxxxxx",
 			"http://example.com/auth/callback",
+			"dummy data",
 		)
 	assert.Nil(t, err)
 }
@@ -70,6 +73,7 @@ func TestRedirectURL(t *testing.T) {
 			"xxxxxxxx",
 			"xxxxxxxxxxxxxxxxxxxxxxxx",
 			"/auth/callback",
+			"dummy data",
 		)
 	assert.NotNil(t, err)
 
@@ -78,6 +82,7 @@ func TestRedirectURL(t *testing.T) {
 			"xxxxxxxx",
 			"xxxxxxxxxxxxxxxxxxxxxxxx",
 			"http://example.com/auth/callback",
+			"dummy data",
 		)
 	assert.Nil(t, err)
 }
@@ -100,6 +105,7 @@ func TestExchange(t *testing.T) {
 			"xxxxxxxx",
 			"xxxxxxxxxxxxxxxxxxxxxxxx",
 			"http://example.com/auth/callback",
+			"dummy data",
 		)
 
 	err = gocialTest.Handle(gocialTest.state, "foo")
