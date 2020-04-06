@@ -145,9 +145,9 @@ func (g *Gocial) Redirect(clientID, clientSecret, redirectURL string, additional
 	}
 
 	stateWithData := g.state + "|" + additionaldata
-	stateWithDataEncoded := base64.StdEncoding.EncodeToString([]byte(stateWithData))
+	stateWithEncodedData := base64.StdEncoding.EncodeToString([]byte(stateWithData))
 
-	return g.conf.AuthCodeURL(stateWithDataEncoded), nil
+	return g.conf.AuthCodeURL(stateWithEncodedData), nil
 }
 
 // Handle callback from provider
